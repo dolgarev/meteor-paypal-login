@@ -7,13 +7,3 @@ Install
 ```
 meteor add liberation:paypal-login
 ```
-
-Setup
------------
-```js
-ServiceConfiguration.configurations.upsert(
-  { service: "paypal" },
-  { $set: { clientId: "...", secret: "...", loginStyle: "popup", environment: "[live|sandbox]"} }
-);
-```
-
