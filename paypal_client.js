@@ -30,8 +30,7 @@ PaypalLogin.requestCredential = function (options, credentialRequestCompleteCall
       credentialToken = Random.secret(), 
       loginStyle = OAuth._loginStyle('paypal', config, options);    
 
-  var loginUrl =
-    PaypalLogin.getAuthorizationEndpoint() + '/webapps/auth/protocol/openidconnect/v1/authorize' +
+  var loginUrl = PaypalLogin.getAuthorizationEndpoint() + '/webapps/auth/protocol/openidconnect/v1/authorize' +
     '?client_id=' + config.clientId +
     '&scope=' + flatScope +
     '&redirect_uri=' + OAuth._redirectUri('paypal', config) +
