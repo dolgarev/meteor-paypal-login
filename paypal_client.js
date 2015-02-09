@@ -3,7 +3,7 @@
 // @param credentialRequestCompleteCallback {Function} Callback function to call on
 //   completion. Takes one argument, credentialToken on success, or Error on
 //   error.
-PaypalLogin.requestCredential = function (options, credentialRequestCompleteCallback) {
+PaypalLogin.requestCredential = function(options, credentialRequestCompleteCallback) {
   // support both (options, callback) and (callback).
   if (!credentialRequestCompleteCallback) {
     if (_.isFunction(options)) {
@@ -15,6 +15,11 @@ PaypalLogin.requestCredential = function (options, credentialRequestCompleteCall
   }
 
   options = _.isObject(options) ? options : {};
+  credentialRequestCompleteCallback = _.isFunction(credentialRequestCompleteCallback) ? credentialRequestCompleteCallback : function() {
+    if (console && _.isFunction(console.log)) {
+      console.log('PaypalLogin#credentialRequestCompleteCallback', arguments);
+    }
+  };
 
   var config = PaypalLogin.getConfig();
   if (!config) {
