@@ -1,10 +1,14 @@
 OAuth.registerService('paypal', 2, null, function(query) {
   //https://developer.paypal.com/webapps/developer/docs/api/#get-user-information  
-  var accessToken = getAccessToken(query),
-      identity = getIdentity(accessToken) || {},
+  var tokenInfo = getTokenInfo(query),
+      accessToken = tokenInfo.access_token,
+      identity = getIdentity(accessToken),
       serviceData = {
         'id': identity.user_id,
-        'accessToken': OAuth.sealSecret(accessToken)  
+        'tokenType': tokenInfo.token_type,
+        'accessToken': OAuth.sealSecret(accessToken),
+        'refreshToken': OAuth.sealSecret(tokenInfo.refresh_token),
+        'expiresAt': Date.now() + (tokenInfo.expires_in * 1000)
       },
       whitelisted = [
         'name', 'given_name', 'family_name', 'email', 'verified', 'language',
@@ -24,12 +28,9 @@ OAuth.registerService('paypal', 2, null, function(query) {
   };
 });
 
-var getAccessToken = function(query) {
+var getTokenInfo = function(query) {
   var config = PaypalLogin.getConfig();
-  if (!config) {
-    throw new ServiceConfiguration.ConfigError();
-  }
-
+  
   var response;
   try {
     response = HTTP.post(
@@ -50,8 +51,12 @@ var getAccessToken = function(query) {
   if (response.data.error) { // if the http response was a json object with an error attribute
     throw new Error("Failed to complete OAuth handshake with Paypal. " + response.data.error);
   } else {
-    return response.data.access_token;
+    return response.data;
   }
+};
+
+var getAccessToken = function(query) {
+  return getTokenInfo(query).access_token;
 };
 
 var getIdentity = function(accessToken) {
