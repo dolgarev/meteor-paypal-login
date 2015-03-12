@@ -21,7 +21,7 @@ PaypalLogin.requestCredential = function(options, credentialRequestCompleteCallb
     }
   };
 
-  var config = PaypalLogin.getConfig();
+  var config = this._getConfig();
   if (!config) {
     if (_.isFunction(credentialRequestCompleteCallback)) {
       credentialRequestCompleteCallback(new ServiceConfiguration.ConfigError());
@@ -29,9 +29,7 @@ PaypalLogin.requestCredential = function(options, credentialRequestCompleteCallb
     return;
   }
 
-  var defaultScope = _.isArray(PaypalLogin.defaultScope) ? PaypalLogin.defaultScope : [],
-      scope = ['openid', 'email'].concat(_.isArray(options.requestPermissions) ? options.requestPermissions : defaultScope),
-      flatScope = _.map(_.uniq(scope), encodeURIComponent).join('+'),
+  var flatScope = _.map(this._getScope(options.requestPermissions), encodeURIComponent).join('+'),
       credentialToken = Random.secret(), 
       loginStyle = OAuth._loginStyle('paypal', config, options);    
 
