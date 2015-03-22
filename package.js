@@ -1,7 +1,7 @@
 Package.describe({
   name: 'liberation:paypal-login',
   summary: 'Log In with PayPal',
-  version: '1.0.3',
+  version: '1.0.4',
   git: 'https://github.com/dolgarev/meteor-paypal-login'
 });
 
